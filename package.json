@@ -1,0 +1,16 @@
+{
+  "name": "unity-docs-bot",
+  "version": "0.1.0",
+  "description": "Unity Docs seracher bot",
+  "main": "index.js",
+  "scripts": {
+    "run": "node ."
+  },
+  "author": "eXponenta",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "log4js": "^4.3.1",
+    "telegraf": "^3.30.1"
+  }
+}
