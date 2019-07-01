@@ -7,8 +7,10 @@ const Texts = require("./langs.json");
 require("dotenv").config();
 
 function generateAnswer(item, context) {
-	const { id, first_name, username} = context.update.inline_query.from;
-	const text =`${first_name}(@${username})\n<b>${item.title}</b>\n\n${item.summary}\n\n${item.url}`;
+	
+	const title = item.isManual ? ("Manual:" + item.title) : item.title;
+
+	const text =`<b>${title}</b>\n${item.summary}\n${item.url}`;
 
 	return {
 		type : "article",
@@ -36,15 +38,14 @@ bot.start((context) => {
 });
 
 bot.inlineQuery( async (query, middle) => {
-	
-	if(query.length < 5) {
+	//trottling
+	if(query.length < 3) {
 		return;
 	}
 	
 	const res = Unity.search(query);
 	const result = res.map((e) => generateAnswer(e, middle));
 
-	//console.log(result);
 	middle.answerInlineQuery( result, { cache_time: 10 });
 });
 
@@ -58,8 +59,3 @@ bot.action(/join:/, async (ctx, next) => {
 bot.launch().then(() => {
 	console.log("Bot started!");
 });
-
-//ext --
-function capitalize(string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}

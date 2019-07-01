@@ -1,7 +1,7 @@
 {
   "name": "unity-docs-bot",
-  "version": "0.1.0",
-  "description": "Unity Docs seracher bot",
+  "version": "0.1.1",
+  "description": "Unity Docs searcher bot",
   "main": "index.js",
   "scripts": {
     "run": "node ."

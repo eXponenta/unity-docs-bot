@@ -3,6 +3,6 @@
         "hello" :"<b>Hello!</b>\n I'm can search Unity API documentation.\n Call me @unity_docs_bot from input"
     },
     "ru" : {
-        "hello" :"<b>Привет!</b>\n Я могу поискать документацию на Unity.\n Вызови меня @unity_docs_api в поле ввода"
+        "hello" :"<b>Привет!</b>\n Я могу поискать документацию на Unity.\n Вызови меня @unity_docs_bot в поле ввода"
     }
 }

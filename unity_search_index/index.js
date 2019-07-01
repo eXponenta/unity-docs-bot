@@ -1,22 +1,23 @@
-const base = require("./base");
+const ScriptBD = require("./script/index.json");
+const ManualBD = require("./manual/index.json");
 
-const baseUrl = "https://docs.unity3d.com/ScriptReference/";
+const scriptBaseURL = "https://docs.unity3d.com/ScriptReference/";
+const manualBaseURL = "https://docs.unity3d.com/Manual/";
 
-function getPageInfo(id) {
-    
-    return {
-        id : id,
-        title : base.pages[id][1],
-        url : baseUrl + base.pages[id][0] + ".html",
-        summary : "" + base.info[id][0]
-    };
+function getPageInfo(bd, id) {
+	const realId = bd.info[id][1];
+	return {
+		id: id,
+		title: bd.pages[realId][1],
+		url: bd.pages[realId][0] + ".html",
+		summary: "" + bd.info[id][0]
+	};
 }
 
 //Алгоритм стырил напрямую с https://docs.unity.com/
-
-function getSearchResults(terms, query, limit = -1) {
-	const common = base.common;
-	const searchIndex = base.searchIndex;
+function getSearchResults(bd, terms, query, limit = -1) {
+	const common = bd.common;
+	const searchIndex = bd.searchIndex;
 
 	const score = {};
 	const found_common = [];
@@ -54,8 +55,7 @@ function getSearchResults(terms, query, limit = -1) {
 
 	var results = new Array();
 	for (let page_id in score) {
-
-        const info = getPageInfo(page_id);
+		const info = getPageInfo(bd, page_id);
 		const title = info.title;
 		const summary = info.summary;
 		const summary_lower = summary.toLowerCase();
@@ -92,46 +92,61 @@ function getSearchResults(terms, query, limit = -1) {
 	results = results.sort(function(a, b) {
 		if (score[b] == score[a]) {
 			// sort alphabetically by title if score is the same
-			var x = getPageInfo(a).title.toLowerCase();
-			var y = getPageInfo(b).title.toLowerCase();
+			var x = getPageInfo(bd, a).title.toLowerCase();
+			var y = getPageInfo(bd, b).title.toLowerCase();
 			return x < y ? -1 : x > y ? 1 : 0;
 		} else {
 			// else by score descending
 			return score[b] - score[a];
 		}
-    });
+	});
 
-    if(limit > 0) {
-        results.length = limit;
-    }
+	if (limit > 0) {
+		results.length = limit;
+	}
 
-    const set = new Set(results);
-	return [...set].map((e)=>({
-        id : e,
-        score : score[e]
-    }));
+	const set = new Set(results);
+	return [...set].map(e => ({
+		id: e,
+		score: score[e]
+	}));
 }
 
 function search(query, limit = 30) {
-    const terms = query.split(/[^A-z]/gm)
-        .map(e => e.toLowerCase())
-        .filter(e => e);
-	
-	if(terms.length == 0) return [];
+	const terms = query
+		.split(/[^A-z]/gm)
+		.map(e => e.toLowerCase())
+		.filter(e => e);
 
-	const search = getSearchResults(terms, query, limit);
+	if (terms.length == 0) return [];
 
-	const results = getSearchResults(terms, query, limit)
+	let isManual = false;
+	if (terms[0].startsWith("man")) {
+		if (terms.length == 1) {
+			return [];
+		}
+
+		isManual = true;
+		terms.splice(0, 1);
+	}
+
+	const bd = isManual ? ManualBD : ScriptBD;
+
+	const results = getSearchResults(bd, terms, query, limit)
 		.filter(e => e.id)
-		.map((e)=>{
-			return Object.assign(getPageInfo(e.id), {
-				id : e.id, score : e.score
+		.map(e => {
+			const info = getPageInfo(bd, e.id);
+			return Object.assign(info, {
+				id: e.id,
+				url: isManual ? manualBaseURL + info.url : scriptBaseURL + info.url,
+				score: e.score,
+				isManual: isManual
 			});
-    	});
-    
-    return results;
+		});
+
+	return results;
 }
 
 module.exports = {
-	search,
+	search
 };
