@@ -1,8 +1,8 @@
 {
     "en" : {
-        "hello" :"<b>Hello!</b>\n I'm can search Unity API documentation.\nCall me @unity_docs_bot from input\nUse @unity_docs_bot <i>man</i> for manulas searching"
+        "hello" :"<b>Hello!</b>\nI'm can search Unity API documentation.\nCall me @unity_docs_bot from input\nUse @unity_docs_bot <i>man</i> for manulas searching"
     },
     "ru" : {
-        "hello" :"<b>Привет!</b>\n Я могу поискать документацию на Unity.\nВызови меня @unity_docs_bot в поле ввода\n Используй @unity_docs_bot <i>man</i> для поиска мануалов"
+        "hello" :"<b>Привет!</b>\nЯ могу поискать документацию на Unity.\nВызови меня @unity_docs_bot в поле ввода\nИспользуй @unity_docs_bot <i>man</i> для поиска мануалов"
     }
 }
